@@ -5,14 +5,21 @@ This repo makes it easy to create VM images for the build agents that power your
 The following configuration is supported:
 
 - VM provider: GCE
-- VM OS: Win64
+- VM OS: Win64, Ubuntu Linux (untested)
 - VCS for game project: Git
 - Build system: GitHub Actions
 - Compiler toolchain: Visual Studio 2019 Build Tools
 
 # How to use
+### Windows
 
 `packer build -var project_id=<your GCE project ID> -var zone=<zone which the builder VM should be run in> -var image_name=<name> UE4-GCE-Win64-Git-GitHubActions-MSVC.json` -- this will build a VM image and store it within the chosen GCE project.
+
+### Linux
+
+**Linux is currently untested on Google Cloud!**
+
+`packer build -var project_id=<your GCE project ID> -var zone=<zone which the builder VM should be run in> -var image_name=<name> UE4-GCE-Linux-Git-GitHubActions.json` -- this will build a VM image and store it within the chosen GCE project.
 
 Later on, you can create VM instances from the image. You can give them additional disk, up to 2TB.
 
