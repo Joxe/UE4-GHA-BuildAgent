@@ -21,12 +21,12 @@
   "provisioners": [
     {
       "type": "file",
-      "source": "ImageCreation",
+      "source": "Windows/ImageCreation",
       "destination": "C:\\"
     },
     {
       "type": "file",
-      "source": "Runtime",
+      "source": "Windows/Runtime",
       "destination": "C:\\"
     },
     {

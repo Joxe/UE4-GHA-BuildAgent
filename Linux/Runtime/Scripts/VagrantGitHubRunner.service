@@ -1,0 +1,16 @@
+[Unit]
+Description=Startup service for GitHub Actions Runner.
+
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/VagrantService.sh
+Restart=on-failure
+RestartSec=10
+KillMode=process
+User=not-set
+
+[Install]
+WantedBy=multi-user.target

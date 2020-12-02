@@ -1,0 +1,59 @@
+{
+	"variables": {
+		"project_id": "",
+		"zone": "",
+		"image_name": "",
+		"ssh_name": "",
+		"ssh_pass": ""
+	},
+	"builders": [
+		{
+			"name": "LinuxBuilder",
+			"type": "googlecompute",
+			"project_id": "{{user `project_id`}}",
+			"source_image": "{{user `source_image`}}",
+			"guest_os_type": "Ubuntu_64",
+			"disk_size" : "300",
+			"disk_type": "pd-ssd",
+			"communicator": "ssh",
+			"ssh_username": "{{user `ssh_name`}}",
+			"ssh_password": "{{user `ssh_pass`}}",
+			"ssh_timeout": "1800s",
+			"image_name": "{{user `image_name`}}",
+			"state_timeout": "10m",
+			"zone": "{{user `zone`}}",
+			"shutdown_command": "echo {{user `ssh_pass`}} | sudo -S shutdown -P now"
+		}
+	],
+	"provisioners": [
+		{
+			"type": "file",
+			"Source": "Linux",
+			"Destination": "~/"
+		},
+		{
+			"type": "shell",
+			"inline": [
+				"echo 'Making sure that all the scripts in our Linux directory can be executed.'",
+				"echo {{user `ssh_pass`}} | sudo -S find ~/Linux/ -type f -name '*.sh' -exec chmod +x {} \\;",
+				"echo 'All files has been given executable permission'"
+			]
+		},
+		{
+			"type": "shell",
+			"inline": [
+				"echo 'Registering the GitHubRunner as a startup service...'",
+				"echo {{user `ssh_pass`}} | sudo -S ~/Linux/ImageCreation/Tools/Scripts/Register-AutoStartService.sh --User {{user `ssh_name`}}"
+			]
+		},
+		{
+			"type": "shell",
+			"inline": [
+				"echo {{user `ssh_pass`}} | sudo -S apt update",
+				"sudo apt install -y git mono-complete curl jq",
+				"mkdir ~/.ssh/",
+				"ssh-keyscan github.com >> ~/.ssh/known_hosts"
+			]
+		}
+	]
+}
